@@ -1,4 +1,4 @@
-package demo;
+package demo.base;
 
 class Phone {
     public volatile int number;

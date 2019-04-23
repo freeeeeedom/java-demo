@@ -1,6 +1,4 @@
-package demo;
-
-import java.util.concurrent.TimeUnit;
+package demo.base;
 
 public class DeadLockDemo {
     public static void main(String[] args) {
