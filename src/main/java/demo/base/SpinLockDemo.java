@@ -1,5 +1,6 @@
 package demo.base;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -29,19 +30,23 @@ public class SpinLockDemo {
 
     /**
      * 自旋锁Demo 通过atomicReference的CAS来改变其值来实现
+     *
      * @param args
      */
     public static void main(String[] args) {
         getlock();
         new Thread(() -> {
             getlock();
+            await1Seconds();
             unlock();
         }, "t1").start();
 
         new Thread(() -> {
             getlock();
+            await1Seconds();
             unlock();
         }, "t2").start();
+        await1Seconds();
         unlock();
         try {
             Thread.sleep(1000);
@@ -49,5 +54,13 @@ public class SpinLockDemo {
             e.printStackTrace();
         }
         System.out.println("mission complete");
+    }
+
+    private static void await1Seconds() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
