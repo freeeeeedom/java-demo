@@ -1,6 +1,5 @@
 package demo.design.AbstractFactoryPattern.factory;
 
-import demo.design.AbstractFactoryPattern.factory.AbstractFactory;
 import demo.design.AbstractFactoryPattern.factory.impl.ColorFactory;
 import demo.design.AbstractFactoryPattern.factory.impl.ShapeFactory;
 
