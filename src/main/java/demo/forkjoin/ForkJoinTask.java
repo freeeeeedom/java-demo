@@ -3,37 +3,60 @@ package demo.forkjoin;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
+/**
+ * 通过索引拆分list ForkJoin模式
+ * @author: Nevernow
+ * @Date: 14:48 2019/5/27
+ */
 public class ForkJoinTask extends RecursiveTask<List> {
 
     private final static int DEFAULT_SIZE = 200;
     private static TaskInterface task;
     private static int size = 0;
-    private List list;
+    private static List list;
+    /**
+     * 开始位置索引
+     *
+     * @author: Nevernow
+     * @Date: 2019/5/27 14:43
+     */
+    private int start;
+    /**
+     * 开始位置索引
+     *
+     * @author: Nevernow
+     * @Date: 2019/5/27 14:43
+     */
+    private int end;
 
-    public ForkJoinTask(List list, int size, TaskInterface task) {
-        this.list = list;
+
+    public ForkJoinTask(List list, int start, int end, int size, TaskInterface task) {
+        ForkJoinTask.list = list;
+        this.start = start;
+        this.end = end;
         ForkJoinTask.size = size;
         ForkJoinTask.task = task;
     }
 
     public ForkJoinTask(List list, TaskInterface task) {
-        this(list, DEFAULT_SIZE, task);
+        this(list, 0, list.size(), DEFAULT_SIZE, task);
     }
 
-    private ForkJoinTask(List list) {
-        this.list = list;
+    private ForkJoinTask(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
 
     @Override
     protected List compute() {
         if (list.size() < size) {
-            return task.execute(list);
+            return task.execute(list.subList(start, end));
         }
-        int size = list.size();
-        ForkJoinTask task1 = new ForkJoinTask(list.subList(0, size / 2));
-        ForkJoinTask task2 = new ForkJoinTask(list.subList(size / 2, size));
+        int mid = end / 2;
+        ForkJoinTask task1 = new ForkJoinTask(start, mid);
+        ForkJoinTask task2 = new ForkJoinTask(mid, end);
 
-        //两个任务并发执行起来
+        //两个任务并发执行
         invokeAll(task1, task2);
 
         //执行任务并返回结果
