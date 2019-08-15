@@ -5,6 +5,7 @@ import java.util.concurrent.RecursiveTask;
 
 /**
  * 通过索引拆分list ForkJoin模式
+ *
  * @author: Nevernow
  * @Date: 14:48 2019/5/27
  */
@@ -49,10 +50,13 @@ public class ForkJoinTask extends RecursiveTask<List> {
 
     @Override
     protected List compute() {
-        if (list.size() < size) {
-            return task.execute(list.subList(start, end));
+        List runList = list.subList(start, end);
+        System.out.println("start:" + start);
+        System.out.println("end:" + end);
+        if (runList.size() < size) {
+            return task.execute(runList);
         }
-        int mid = end / 2;
+        int mid = (end - start) / 2 + start;
         ForkJoinTask task1 = new ForkJoinTask(start, mid);
         ForkJoinTask task2 = new ForkJoinTask(mid, end);
 
